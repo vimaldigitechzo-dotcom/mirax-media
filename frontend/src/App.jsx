@@ -314,7 +314,9 @@ const ContactSection = memo(function ContactSection() {
                 </div>
                 <div className="contact-item-info">
                   <span>Email Address</span>
-                  <strong>hello@miraxmedia.in</strong>
+                  <a href="mailto:miraxcontact@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>
+                    <strong>miraxcontact@gmail.com</strong>
+                  </a>
                 </div>
               </div>
 
@@ -324,7 +326,9 @@ const ContactSection = memo(function ContactSection() {
                 </div>
                 <div className="contact-item-info">
                   <span>Phone Number</span>
-                  <strong>+91 98765 43210</strong>
+                  <a href="tel:+917200405822" style={{ color: 'inherit', textDecoration: 'none' }}>
+                    <strong>+91 7200405822</strong>
+                  </a>
                 </div>
               </div>
 
@@ -461,7 +465,7 @@ const ContactSection = memo(function ContactSection() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 7200405822"
                         className="glass-input"
                         required
                         disabled={isSubmitting}
@@ -1122,8 +1126,16 @@ export default function App() {
             <div className="footer-col">
               <h4>Direct Contact</h4>
               <ul>
-                <li>hello@miraxmedia.in</li>
-                <li>+91 XXXX XXX XXX</li>
+                <li>
+                  <a href="mailto:miraxcontact@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>
+                    miraxcontact@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+917200405822" style={{ color: 'inherit', textDecoration: 'none' }}>
+                    +91 7200405822
+                  </a>
+                </li>
                 <li>India (Pan-India &amp; Global)</li>
                 <li>Mon &ndash; Sat (9:00 AM &ndash; 7:00 PM IST)</li>
               </ul>
