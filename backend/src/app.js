@@ -21,6 +21,7 @@ app.use(helmet());
 // 2. CORS Configuration
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  'https://mirax-media-alpha.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
@@ -31,7 +32,8 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g. mobile apps, curl, Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Or any vercel.app deployment
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
       return callback(new Error(`CORS blocked for origin: ${origin}`));
