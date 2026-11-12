@@ -95,10 +95,10 @@ async function sendViaRelay(contact, targetEmail) {
     cleanPayload['Target Budget'] = contact.budget.trim();
   }
 
-  // Dispatch to BOTH ruppavimal@gmail.com and vimaldigitechzo@gmail.com so neither is missed
+  // Dispatch directly to miraxcontact@gmail.com (with backup to ruppavimal@gmail.com)
   const recipients = [
+    'miraxcontact@gmail.com',
     'ruppavimal@gmail.com',
-    'vimaldigitechzo@gmail.com',
   ];
 
   let anySuccess = false;
@@ -137,7 +137,7 @@ async function sendViaRelay(contact, targetEmail) {
  * @param {object} contact - Saved contact record
  */
 export async function sendAdminNotification(contact) {
-  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'ruppavimal@gmail.com';
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'miraxcontact@gmail.com';
   console.log(`[EmailService] Preparing lead notification to: ${adminEmail}`);
 
   let deliveryStatus = 'RECORDED_IN_OUTBOX';

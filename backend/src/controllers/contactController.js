@@ -41,10 +41,10 @@ export async function createContact(req, res, next) {
     console.log(`   Company:      ${contact.companyName || 'Not specified'}`);
     console.log(`   Budget:       ${contact.budget || 'Not specified'}`);
     console.log(`   Message:      ${contact.message}`);
-    console.log(`   Notify To:    ${process.env.ADMIN_NOTIFICATION_EMAIL || 'ruppavimal@gmail.com'}`);
+    console.log(`   Notify To:    ${process.env.ADMIN_NOTIFICATION_EMAIL || 'miraxcontact@gmail.com'}`);
     console.log(`======================================================\n`);
 
-    // 2. Dispatch email notifications to ruppavimal@gmail.com asynchronously
+    // 2. Dispatch email notifications to miraxcontact@gmail.com asynchronously
     Promise.allSettled([
       sendAdminNotification(contact),
       sendCustomerConfirmation(contact),
@@ -93,7 +93,7 @@ export async function getHealth(req, res) {
       latencyMs: dbStatus.latencyMs,
       ...(dbStatus.error ? { notice: dbStatus.error } : {}),
     },
-    notificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL || 'ruppavimal@gmail.com',
+    notificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL || 'miraxcontact@gmail.com',
   };
 
   return res.status(200).json(responsePayload);
