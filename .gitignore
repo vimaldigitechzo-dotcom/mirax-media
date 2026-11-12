@@ -1,0 +1,61 @@
+# =========================================================
+# MIRAX MEDIA — Root .gitignore
+# Protects all sensitive API keys, secrets, credentials & builds
+# =========================================================
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment Variables & Secrets (CRITICAL - Never pushed to GitHub)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+*.pem
+*.key
+*.cert
+
+# Client Enquiries & Email Outbox (Local test data protection)
+backend/data/*.json
+!backend/data/.gitkeep
+
+# Build Outputs & Vite Cache
+dist/
+dist-ssr/
+frontend/dist/
+build/
+.vite/
+*/.vite/
+
+# Logs & Runtime Diagnostics
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Database & Migration SQLite Caches
+prisma/migrations/dev.db*
+*.sqlite
+*.sqlite3
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor & IDE configs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
