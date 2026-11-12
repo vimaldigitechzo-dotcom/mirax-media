@@ -747,46 +747,6 @@ export default function App() {
                     </>
                   );
                 })()}
-
-                {/* Bottom slider / pagination control matching reference image */}
-                <div className="orbit-slider-control">
-                  <button
-                    className="slider-arrow"
-                    onClick={() =>
-                      setCurrentSlide((prev) =>
-                        prev > 0 ? prev - 1 : heroSlides.length - 1
-                      )
-                    }
-                    aria-label="Previous Highlight"
-                  >
-                    ‹
-                  </button>
-                  <div className="slider-track">
-                    {heroSlides.map((_, idx) => (
-                      <span
-                        key={idx}
-                        onClick={() => setCurrentSlide(idx)}
-                        className={
-                          idx === currentSlide ? "slider-bar-active" : "slider-dot"
-                        }
-                        style={{ cursor: "pointer" }}
-                        role="button"
-                        aria-label={`Go to slide ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    className="slider-arrow"
-                    onClick={() =>
-                      setCurrentSlide((prev) =>
-                        prev < heroSlides.length - 1 ? prev + 1 : 0
-                      )
-                    }
-                    aria-label="Next Highlight"
-                  >
-                    ›
-                  </button>
-                </div>
               </div>
             </div>
           </div>
