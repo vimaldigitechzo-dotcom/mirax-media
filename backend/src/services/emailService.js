@@ -95,15 +95,17 @@ async function sendViaRelay(contact, targetEmail) {
     cleanPayload['Target Budget'] = contact.budget.trim();
   }
 
-  // Try the activated token first, then fallback to email address endpoint
-  const targetEndpoints = [
-    `https://formsubmit.co/ajax/${FORMSUBMIT_TOKEN}`,
-    `https://formsubmit.co/ajax/${targetEmail}`,
+  // Dispatch to BOTH ruppavimal@gmail.com and vimaldigitechzo@gmail.com so neither is missed
+  const recipients = [
+    'ruppavimal@gmail.com',
+    'vimaldigitechzo@gmail.com',
   ];
 
-  for (const endpoint of targetEndpoints) {
+  let anySuccess = false;
+
+  for (const email of recipients) {
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(`https://formsubmit.co/ajax/${email}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,26 +117,18 @@ async function sendViaRelay(contact, targetEmail) {
       });
 
       const result = await response.json().catch(() => ({}));
-
       if (result.success === 'true' || result.success === true) {
-        console.log(`✅ [EmailService]: Lead details successfully delivered to ${targetEmail}!`);
-        return { success: true, method: 'relay' };
-      }
-
-      if (result.message && result.message.includes('needs Activation')) {
-        console.log(`\n======================================================`);
-        console.log(`📬 [GMAIL CONFIRMATION]:`);
-        console.log(`   Click the blue "ACTIVATE FORM" button in your Gmail tab.`);
-        console.log(`   Once activated, every client submission will arrive immediately!`);
-        console.log(`======================================================\n`);
-        return { success: true, method: 'activation_pending', message: result.message };
+        console.log(`✅ [EmailService]: Lead delivered to ${email}!`);
+        anySuccess = true;
+      } else {
+        console.warn(`[EmailService]: Notice for ${email}:`, result.message);
       }
     } catch (relayError) {
-      console.warn(`[EmailService]: Relay endpoint note (${endpoint}):`, relayError.message);
+      console.warn(`[EmailService]: Relay error for ${email}:`, relayError.message);
     }
   }
 
-  return { success: false, error: 'Relay endpoints unreachable' };
+  return { success: anySuccess, method: 'relay' };
 }
 
 /**
