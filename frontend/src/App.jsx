@@ -1,5 +1,6 @@
-import { useState, useMemo, memo } from "react";
+import { useState, useMemo, memo, useEffect } from "react";
 import { submitContactEnquiry } from "./services/api.js";
+import adminApi from "./services/adminApi.js";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -1144,7 +1145,9 @@ export default function App() {
 
           <div className="footer-bottom">
             <span>&copy; {new Date().getFullYear()} MIRAX MEDIA. All rights reserved.</span>
-            <span>Crafted with Premium Frosted Glassmorphism</span>
+            <span>
+              Crafted with Premium Frosted Glassmorphism • <a href="/admin" style={{ color: "#b66bff", textDecoration: "none", fontWeight: 500 }}>Admin Portal</a>
+            </span>
           </div>
         </div>
       </footer>

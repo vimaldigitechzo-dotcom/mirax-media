@@ -3,9 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
 }
 
 enum ContactStatus {
@@ -16,21 +21,222 @@ enum ContactStatus {
   REJECTED
 }
 
+model Admin {
+  id           String             @id @default(uuid()) @db.Uuid
+  email        String             @unique @db.VarChar(255)
+  passwordHash String             @map("password_hash") @db.VarChar(255)
+  fullName     String             @map("full_name") @db.VarChar(150)
+  avatarUrl    String?            @map("avatar_url") @db.Text
+  role         Role               @default(ADMIN)
+  isActive     Boolean            @default(true) @map("is_active")
+  lastLoginAt  DateTime?          @map("last_login_at")
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+  activityLogs AdminActivityLog[]
+
+  @@map("admins")
+}
+
+model AdminActivityLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  adminId   String   @map("admin_id") @db.Uuid
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action    String   @db.VarChar(100)
+  resource  String   @db.VarChar(100)
+  details   String?  @db.Text
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([adminId], name: "idx_activity_admin_id")
+  @@index([createdAt(sort: Desc)], name: "idx_activity_created_at")
+  @@map("admin_activity_logs")
+}
+
+model WebsiteContent {
+  id         String   @id @default(uuid()) @db.Uuid
+  sectionKey String   @unique @map("section_key") @db.VarChar(100)
+  title      String?  @db.VarChar(255)
+  subtitle   String?  @db.VarChar(255)
+  bodyText   String?  @map("body_text") @db.Text
+  buttonText String?  @map("button_text") @db.VarChar(100)
+  buttonLink String?  @map("button_link") @db.VarChar(255)
+  isEnabled  Boolean  @default(true) @map("is_enabled")
+  extraJson  String?  @map("extra_json") @db.Text
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("website_contents")
+}
+
+model Banner {
+  id           String   @id @default(uuid()) @db.Uuid
+  title        String   @db.VarChar(255)
+  subtitle     String?  @db.VarChar(255)
+  description  String?  @db.Text
+  ctaText      String?  @map("cta_text") @db.VarChar(100)
+  ctaLink      String?  @map("cta_link") @db.VarChar(255)
+  imageUrl     String?  @map("image_url") @db.Text
+  videoUrl     String?  @map("video_url") @db.Text
+  displayOrder Int      @default(0) @map("display_order")
+  isPublished  Boolean  @default(true) @map("is_published")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([isPublished], name: "idx_banners_published")
+  @@map("banners")
+}
+
+model Media {
+  id           String   @id @default(uuid()) @db.Uuid
+  title        String   @db.VarChar(255)
+  altText      String?  @map("alt_text") @db.VarChar(255)
+  caption      String?  @db.Text
+  category     String   @default("general") @db.VarChar(100)
+  resourceType String   @default("IMAGE") @map("resource_type") @db.VarChar(20)
+  publicId     String?  @map("public_id") @db.VarChar(255)
+  url          String   @db.Text
+  secureUrl    String   @map("secure_url") @db.Text
+  format       String?  @db.VarChar(20)
+  bytes        Int?
+  width        Int?
+  height       Int?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([category], name: "idx_media_category")
+  @@index([resourceType], name: "idx_media_type")
+  @@map("media")
+}
+
+model Service {
+  id           String   @id @default(uuid()) @db.Uuid
+  number       String   @db.VarChar(10)
+  title        String   @db.VarChar(200)
+  category     String   @db.VarChar(100)
+  description  String   @db.Text
+  deliverables String?  @db.Text
+  iconName     String   @default("TrendingUp") @map("icon_name") @db.VarChar(50)
+  imageUrl     String?  @map("image_url") @db.Text
+  displayOrder Int      @default(0) @map("display_order")
+  isPublished  Boolean  @default(true) @map("is_published")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([isPublished], name: "idx_services_published")
+  @@map("services")
+}
+
+model Project {
+  id           String         @id @default(uuid()) @db.Uuid
+  title        String         @db.VarChar(200)
+  category     String         @db.VarChar(100)
+  metric       String?        @db.VarChar(100)
+  description  String?        @db.Text
+  coverImage   String         @map("cover_image") @db.Text
+  videoUrl     String?        @map("video_url") @db.Text
+  projectUrl   String?        @map("project_url") @db.VarChar(255)
+  isFeatured   Boolean        @default(false) @map("is_featured")
+  displayOrder Int            @default(0) @map("display_order")
+  isPublished  Boolean        @default(true) @map("is_published")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  images       ProjectImage[]
+
+  @@index([isPublished], name: "idx_projects_published")
+  @@index([isFeatured], name: "idx_projects_featured")
+  @@map("projects")
+}
+
+model ProjectImage {
+  id           String  @id @default(uuid()) @db.Uuid
+  projectId    String  @map("project_id") @db.Uuid
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  imageUrl     String  @map("image_url") @db.Text
+  caption      String? @db.VarChar(255)
+  displayOrder Int     @default(0) @map("display_order")
+
+  @@index([projectId], name: "idx_project_images_project_id")
+  @@map("project_images")
+}
+
+model Testimonial {
+  id           String   @id @default(uuid()) @db.Uuid
+  clientName   String   @map("client_name") @db.VarChar(150)
+  designation  String?  @db.VarChar(150)
+  company      String?  @db.VarChar(150)
+  feedback     String   @db.Text
+  avatarUrl    String?  @map("avatar_url") @db.Text
+  rating       Int      @default(5)
+  isPublished  Boolean  @default(true) @map("is_published")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([isPublished], name: "idx_testimonials_published")
+  @@map("testimonials")
+}
+
 model Contact {
-  id          String        @id @default(uuid()) @db.Uuid
-  fullName    String        @map("full_name") @db.VarChar(150)
-  email       String        @db.VarChar(255)
-  phone       String        @db.VarChar(20)
-  companyName String?       @map("company_name") @db.VarChar(150)
-  service     String        @db.VarChar(100)
-  budget      String?       @db.VarChar(100)
-  message     String        @db.Text
-  status      ContactStatus @default(NEW)
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  id            String        @id @default(uuid()) @db.Uuid
+  fullName      String        @map("full_name") @db.VarChar(150)
+  email         String        @db.VarChar(255)
+  phone         String        @db.VarChar(20)
+  companyName   String?       @map("company_name") @db.VarChar(150)
+  service       String        @db.VarChar(100)
+  budget        String?       @db.VarChar(100)
+  message       String        @db.Text
+  status        ContactStatus @default(NEW)
+  internalNotes String?       @map("internal_notes") @db.Text
+  isStarred     Boolean       @default(false) @map("is_starred")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
 
   @@index([email], name: "idx_contacts_email")
   @@index([status], name: "idx_contacts_status")
   @@index([createdAt(sort: Desc)], name: "idx_contacts_created_at")
   @@map("contacts")
+}
+
+model BlogPost {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String    @db.VarChar(255)
+  slug        String    @unique @db.VarChar(255)
+  excerpt     String?   @db.Text
+  content     String    @db.Text
+  coverImage  String?   @map("cover_image") @db.Text
+  authorName  String?   @default("MIRAX Team") @map("author_name") @db.VarChar(150)
+  category    String    @default("Digital Marketing") @db.VarChar(100)
+  tags        String?   @db.Text
+  status      String    @default("DRAFT") @db.VarChar(20)
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([slug], name: "idx_blog_slug")
+  @@index([status], name: "idx_blog_status")
+  @@map("blog_posts")
+}
+
+model SeoSetting {
+  id              String   @id @default(uuid()) @db.Uuid
+  pagePath        String   @unique @map("page_path") @db.VarChar(100)
+  metaTitle       String   @map("meta_title") @db.VarChar(255)
+  metaDescription String?  @map("meta_description") @db.Text
+  metaKeywords    String?  @map("meta_keywords") @db.Text
+  ogTitle         String?  @map("og_title") @db.VarChar(255)
+  ogDescription   String?  @map("og_description") @db.Text
+  ogImage         String?  @map("og_image") @db.Text
+  canonicalUrl    String?  @map("canonical_url") @db.VarChar(255)
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("seo_settings")
+}
+
+model WebsiteSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  group     String   @default("general") @db.VarChar(50)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([group], name: "idx_settings_group")
+  @@map("website_settings")
 }
