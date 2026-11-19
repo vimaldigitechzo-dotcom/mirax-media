@@ -237,7 +237,46 @@ const heroSlides = [
   },
 ];
 
-const ContactSection = memo(function ContactSection() {
+const iconMap = {
+  Search,
+  PenTool,
+  UserRound,
+  Target,
+  BarChart3,
+  TrendingUp,
+  Share2: TrendingUp,
+  Video: PenTool,
+  UserCheck: UserRound,
+  Globe: Search,
+};
+
+function getServiceIcon(service) {
+  if (service?.icon && typeof service.icon !== "string") return service.icon;
+  const name = service?.iconName || service?.icon;
+  return iconMap[name] || Search;
+}
+
+function renderGradientTitle(title) {
+  if (!title) return null;
+  const words = String(title).trim().split(" ");
+  if (words.length <= 2) {
+    return <span className="gradient-glass-text">{title}</span>;
+  }
+  const firstPart = words.slice(0, -2).join(" ");
+  const lastPart = words.slice(-2).join(" ");
+  return (
+    <>
+      {firstPart} <span className="gradient-glass-text">{lastPart}</span>
+    </>
+  );
+}
+
+const ContactSection = memo(function ContactSection({ settings }) {
+  const contactEmail = settings?.contact_email || "miraxcontact@gmail.com";
+  const contactPhone = settings?.contact_phone || "+91 7200405822";
+  const address = settings?.address || "India (Pan-India & Global)";
+  const workingHours = settings?.working_hours || "Mon – Sat (9:00 AM – 7:00 PM IST)";
+
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -315,8 +354,8 @@ const ContactSection = memo(function ContactSection() {
                 </div>
                 <div className="contact-item-info">
                   <span>Email Address</span>
-                  <a href="mailto:miraxcontact@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>
-                    <strong>miraxcontact@gmail.com</strong>
+                  <a href={`mailto:${contactEmail}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    <strong>{contactEmail}</strong>
                   </a>
                 </div>
               </div>
@@ -327,8 +366,8 @@ const ContactSection = memo(function ContactSection() {
                 </div>
                 <div className="contact-item-info">
                   <span>Phone Number</span>
-                  <a href="tel:+917200405822" style={{ color: 'inherit', textDecoration: 'none' }}>
-                    <strong>+91 7200405822</strong>
+                  <a href={`tel:${contactPhone.replace(/\s+/g, '')}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    <strong>{contactPhone}</strong>
                   </a>
                 </div>
               </div>
@@ -339,7 +378,7 @@ const ContactSection = memo(function ContactSection() {
                 </div>
                 <div className="contact-item-info">
                   <span>Headquarters &amp; Service</span>
-                  <strong>India (Pan-India &amp; Global)</strong>
+                  <strong>{address}</strong>
                 </div>
               </div>
 
@@ -349,7 +388,7 @@ const ContactSection = memo(function ContactSection() {
                 </div>
                 <div className="contact-item-info">
                   <span>Working Hours</span>
-                  <strong>Mon &ndash; Sat (9:00 AM &ndash; 7:00 PM IST)</strong>
+                  <strong>{workingHours}</strong>
                 </div>
               </div>
             </div>
@@ -538,6 +577,99 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All Projects");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [siteData, setSiteData] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    adminApi
+      .getPublicWebsiteData()
+      .then((res) => {
+        if (isMounted && res?.data) {
+          setSiteData(res.data);
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load dynamic public website data, using defaults:", err);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (siteData?.seo && siteData.seo.length > 0) {
+      const homeSeo = siteData.seo.find((s) => s.pagePath === "/") || siteData.seo[0];
+      if (homeSeo?.metaTitle) {
+        document.title = homeSeo.metaTitle;
+      }
+    }
+  }, [siteData]);
+
+  const heroContent = siteData?.content?.hero || {
+    title: "Where Strategy meets Digital Growth.",
+    subtitle: "DIGITAL MARKETING & GROWTH AGENCY",
+    bodyText:
+      "Mirax Media is a results-driven digital marketing agency helping businesses build a strong online presence through SEO, creative content creation, personal branding, Meta Ads, Google Ads, and social media marketing. We combine creativity, strategy, and data-driven marketing to turn your digital presence into measurable business growth.",
+    buttonText: "Explore Our Services",
+    buttonLink: "#services",
+    isEnabled: true,
+  };
+
+  const aboutContent = siteData?.content?.about || {
+    title: "Who We Are – Your Partner in Digital Growth",
+    subtitle: "ABOUT MIRAX MEDIA",
+    bodyText:
+      "Mirax Media is a digital marketing agency focused on helping businesses grow, connect with their target audience, and build a powerful online presence.\n\nFrom search engine optimization and content creation to personal branding and paid advertising, we provide strategic digital marketing solutions designed to support business growth.\n\nOur approach combines creativity, technology, and performance-driven strategies to help brands stand out in a competitive digital landscape.",
+    buttonText: "Know More About Us",
+    buttonLink: "#contact",
+    isEnabled: true,
+  };
+
+  const ctaContent = siteData?.content?.cta || {
+    title: "Ready to Grow Your Business Online?",
+    subtitle: "YOUR NEXT CHAPTER STARTS HERE",
+    bodyText:
+      "Let's build a stronger digital presence for your brand with the right strategy, creative content, and performance marketing.",
+    buttonText: "Get a Free Consultation",
+    buttonLink: "#contact",
+    isEnabled: true,
+  };
+
+  const dynamicServices = useMemo(() => {
+    if (siteData?.services && siteData.services.length > 0) {
+      return siteData.services.map((s, idx) => ({
+        number: s.number || String(idx + 1).padStart(2, "0"),
+        title: s.title,
+        description: s.description,
+        icon: getServiceIcon(s),
+        tag: s.category || "Growth Service",
+      }));
+    }
+    return services;
+  }, [siteData]);
+
+  const dynamicProjects = useMemo(() => {
+    if (siteData?.projects && siteData.projects.length > 0) {
+      return siteData.projects.map((p) => ({
+        title: p.title,
+        category: p.category || "SEO Projects",
+        type: p.category || "Digital Marketing",
+        metric: p.metric || "High ROI",
+        image: p.coverImage || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=75",
+        projectUrl: p.projectUrl || null,
+        videoUrl: p.videoUrl || null,
+      }));
+    }
+    return projects;
+  }, [siteData]);
+
+  const dynamicCategories = useMemo(() => {
+    if (siteData?.projects && siteData.projects.length > 0) {
+      const cats = Array.from(new Set(siteData.projects.map((p) => p.category).filter(Boolean)));
+      return ["All Projects", ...cats];
+    }
+    return categories;
+  }, [siteData]);
 
   const navigation = [
     { label: "Home", number: "01", href: "#home" },
@@ -550,9 +682,9 @@ export default function App() {
   const filteredProjects = useMemo(
     () =>
       activeCategory === "All Projects"
-        ? projects
-        : projects.filter((project) => project.category === activeCategory),
-    [activeCategory]
+        ? dynamicProjects
+        : dynamicProjects.filter((project) => project.category === activeCategory),
+    [activeCategory, dynamicProjects]
   );
 
   const closeMenu = () => setMenuOpen(false);
@@ -644,28 +776,22 @@ export default function App() {
             <div className="glass-stage-content">
               {/* Left Column */}
               <div className="glass-hero-left">
-                <div className="eyebrow">
-                  <span className="eyebrow-dot" />
-                  DIGITAL MARKETING &amp; GROWTH AGENCY
-                </div>
+                {heroContent.subtitle && (
+                  <div className="eyebrow">
+                    <span className="eyebrow-dot" />
+                    {heroContent.subtitle}
+                  </div>
+                )}
 
-                <h1>
-                  Where Strategy meets{" "}
-                  <span className="gradient-glass-text">Digital Growth.</span>
-                </h1>
+                <h1>{renderGradientTitle(heroContent.title)}</h1>
 
                 <p className="glass-hero-desc">
-                  Mirax Media is a results-driven digital marketing agency helping
-                  businesses build a strong online presence through SEO, creative
-                  content creation, personal branding, Meta Ads, Google Ads, and
-                  social media marketing. We combine creativity, strategy, and
-                  data-driven marketing to turn your digital presence into
-                  measurable business growth.
+                  {heroContent.bodyText}
                 </p>
 
                 <div className="glass-hero-actions">
-                  <a href="#services" className="glass-btn-primary">
-                    <span>Explore Our Services</span>
+                  <a href={heroContent.buttonLink || "#services"} className="glass-btn-primary">
+                    <span>{heroContent.buttonText || "Explore Our Services"}</span>
                     <ArrowRight size={16} />
                   </a>
                   <a href="#contact" className="glass-btn-secondary">
@@ -788,34 +914,21 @@ export default function App() {
               <div className="about-content-box">
                 <div className="eyebrow" style={{ marginBottom: "14px" }}>
                   <span className="eyebrow-dot" />
-                  ABOUT MIRAX MEDIA
+                  {aboutContent.subtitle || "ABOUT MIRAX MEDIA"}
                 </div>
 
                 <h2 style={{ fontSize: "clamp(26px, 3.2vw, 38px)", marginBottom: "18px" }}>
-                  Who We Are – Your Partner in{" "}
-                  <span className="gradient-glass-text">Digital Growth</span>
+                  {renderGradientTitle(aboutContent.title)}
                 </h2>
 
                 <div className="about-paragraphs">
-                  <p>
-                    Mirax Media is a digital marketing agency focused on helping
-                    businesses grow, connect with their target audience, and build
-                    a powerful online presence.
-                  </p>
-                  <p>
-                    From search engine optimization and content creation to personal
-                    branding and paid advertising, we provide strategic digital
-                    marketing solutions designed to support business growth.
-                  </p>
-                  <p>
-                    Our approach combines creativity, technology, and
-                    performance-driven strategies to help brands stand out in a
-                    competitive digital landscape.
-                  </p>
+                  {aboutContent.bodyText.split("\n\n").map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
                 </div>
 
-                <a href="#contact" className="glass-btn-primary">
-                  <span>Know More About Us</span>
+                <a href={aboutContent.buttonLink || "#contact"} className="glass-btn-primary">
+                  <span>{aboutContent.buttonText || "Know More About Us"}</span>
                   <ArrowRight size={16} />
                 </a>
               </div>
@@ -846,7 +959,7 @@ export default function App() {
           </div>
 
           <div className="services-glass-grid">
-            {services.map((service) => {
+            {dynamicServices.map((service) => {
               const Icon = service.icon;
               return (
                 <article className="glass-card service-glass-card" key={service.number}>
@@ -966,7 +1079,7 @@ export default function App() {
 
           {/* Filter Pills */}
           <div className="filter-pills">
-            {categories.map((cat) => (
+            {dynamicCategories.map((cat) => (
               <button
                 key={cat}
                 type="button"
@@ -1027,18 +1140,12 @@ export default function App() {
           <div className="glass-cta-card">
             <div className="eyebrow">
               <span className="eyebrow-dot" />
-              YOUR NEXT CHAPTER STARTS HERE
+              {ctaContent.subtitle || "YOUR NEXT CHAPTER STARTS HERE"}
             </div>
-            <h2>
-              Ready to Grow Your Business{" "}
-              <span className="gradient-glass-text">Online?</span>
-            </h2>
-            <p>
-              Let&apos;s build a stronger digital presence for your brand with the right
-              strategy, creative content, and performance marketing.
-            </p>
-            <a href="#contact" className="glass-btn-primary">
-              <span>Get a Free Consultation</span>
+            <h2>{renderGradientTitle(ctaContent.title)}</h2>
+            <p>{ctaContent.bodyText}</p>
+            <a href={ctaContent.buttonLink || "#contact"} className="glass-btn-primary">
+              <span>{ctaContent.buttonText || "Get a Free Consultation"}</span>
               <ArrowRight size={16} />
             </a>
           </div>
@@ -1048,7 +1155,7 @@ export default function App() {
       {/* =========================================================
           CONTACT US SECTION: ISOLATED MEMOIZED COMPONENT
       ========================================================= */}
-      <ContactSection />
+      <ContactSection settings={siteData?.settings} />
 
       {/* =========================================================
           FOOTER: FROSTED GLASS FOOTER
@@ -1116,7 +1223,7 @@ export default function App() {
             <div className="footer-col">
               <h4>Our Services</h4>
               <ul>
-                {services.map((s) => (
+                {dynamicServices.map((s) => (
                   <li key={s.number}>
                     <a href="#services">{s.title}</a>
                   </li>
@@ -1128,23 +1235,23 @@ export default function App() {
               <h4>Direct Contact</h4>
               <ul>
                 <li>
-                  <a href="mailto:miraxcontact@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>
-                    miraxcontact@gmail.com
+                  <a href={`mailto:${siteData?.settings?.contact_email || 'miraxcontact@gmail.com'}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {siteData?.settings?.contact_email || 'miraxcontact@gmail.com'}
                   </a>
                 </li>
                 <li>
-                  <a href="tel:+917200405822" style={{ color: 'inherit', textDecoration: 'none' }}>
-                    +91 7200405822
+                  <a href={`tel:${(siteData?.settings?.contact_phone || '+91 7200405822').replace(/\s+/g, '')}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {siteData?.settings?.contact_phone || '+91 7200405822'}
                   </a>
                 </li>
-                <li>India (Pan-India &amp; Global)</li>
-                <li>Mon &ndash; Sat (9:00 AM &ndash; 7:00 PM IST)</li>
+                <li>{siteData?.settings?.address || 'India (Pan-India & Global)'}</li>
+                <li>{siteData?.settings?.working_hours || 'Mon – Sat (9:00 AM – 7:00 PM IST)'}</li>
               </ul>
             </div>
           </div>
 
           <div className="footer-bottom">
-            <span>&copy; {new Date().getFullYear()} MIRAX MEDIA. All rights reserved.</span>
+            <span>{siteData?.settings?.copyright || `© ${new Date().getFullYear()} MIRAX MEDIA. All rights reserved.`}</span>
             <span>
               Crafted with Premium Frosted Glassmorphism • <a href="/admin" style={{ color: "#b66bff", textDecoration: "none", fontWeight: 500 }}>Admin Portal</a>
             </span>
