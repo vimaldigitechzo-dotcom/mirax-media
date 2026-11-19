@@ -122,7 +122,7 @@ export default function BannersPage() {
 
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Banners...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Banners...</div>
         ) : banners.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#9e97aa' }}>
             No banners created yet. Click "Add New Banner" to add your first promotional spotlight.
@@ -148,7 +148,7 @@ export default function BannersPage() {
                     <td>{b.subtitle || '—'}</td>
                     <td>
                       {b.ctaText ? (
-                        <span style={{ color: '#b66bff' }}>
+                        <span style={{ color: 'var(--admin-cerulean)' }}>
                           {b.ctaText} ({b.ctaLink})
                         </span>
                       ) : (

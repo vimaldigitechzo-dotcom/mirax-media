@@ -155,9 +155,10 @@ export default function InquiriesPage() {
                   borderRadius: '6px',
                   fontSize: '12px',
                   fontWeight: 600,
-                  border: statusFilter === st ? '1px solid #b66bff' : '1px solid var(--admin-border)',
-                  background: statusFilter === st ? 'rgba(182, 107, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                  color: statusFilter === st ? '#fff' : '#9e97aa',
+                  border: statusFilter === st ? '1px solid var(--admin-cerulean)' : '1px solid var(--admin-border)',
+                  background: statusFilter === st ? 'rgba(0, 150, 255, 0.22)' : 'rgba(255, 255, 255, 0.04)',
+                  color: statusFilter === st ? '#fff' : '#9CA3AF',
+                  boxShadow: statusFilter === st ? '0 0 10px rgba(0, 150, 255, 0.25)' : 'none',
                   cursor: 'pointer',
                 }}
               >
@@ -171,7 +172,7 @@ export default function InquiriesPage() {
       {/* Inquiries Table */}
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Inquiries...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Inquiries...</div>
         ) : inquiries.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#9e97aa' }}>
             No customer inquiries found matching your filters.
@@ -200,20 +201,20 @@ export default function InquiriesPage() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Mail size={12} color="#b66bff" />
+                        <Mail size={12} color="#0096FF" />
                         <a href={`mailto:${item.email}`} style={{ color: '#e2dced', textDecoration: 'none' }}>
                           {item.email}
                         </a>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
                         <Phone size={12} color="#10b981" />
-                        <a href={`tel:${item.phone}`} style={{ color: '#9e97aa', textDecoration: 'none', fontSize: '12px' }}>
+                        <a href={`tel:${item.phone}`} style={{ color: '#9CA3AF', textDecoration: 'none', fontSize: '12px' }}>
                           {item.phone}
                         </a>
                       </div>
                     </td>
                     <td>
-                      <span style={{ color: '#b66bff', fontWeight: 600 }}>{item.service}</span>
+                      <span style={{ color: 'var(--admin-cerulean)', fontWeight: 600 }}>{item.service}</span>
                       {item.budget && (
                         <div style={{ color: '#9e97aa', fontSize: '11px' }}>Budget: {item.budget}</div>
                       )}
@@ -289,7 +290,7 @@ export default function InquiriesPage() {
                 </div>
                 <div>
                   <span style={{ fontSize: '11px', color: '#9e97aa', textTransform: 'uppercase' }}>Service</span>
-                  <div style={{ fontWeight: 700, color: '#b66bff' }}>{activeModalInquiry.service}</div>
+                  <div style={{ fontWeight: 700, color: 'var(--admin-cerulean)' }}>{activeModalInquiry.service}</div>
                 </div>
                 <div>
                   <span style={{ fontSize: '11px', color: '#9e97aa', textTransform: 'uppercase' }}>Email</span>

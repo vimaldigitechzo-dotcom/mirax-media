@@ -82,7 +82,7 @@ export default function ProfilePage() {
       {/* Account Info & Name Card */}
       <div className="admin-card" style={{ marginBottom: '24px' }}>
         <h2 className="admin-card-title" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <User size={18} color="#b66bff" />
+          <User size={18} color="var(--admin-cerulean)" />
           <span>Account Information</span>
         </h2>
 
@@ -93,7 +93,7 @@ export default function ProfilePage() {
         )}
 
         <form onSubmit={handleUpdateProfile}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+          <div className="admin-grid-2" style={{ marginBottom: '16px' }}>
             <div className="admin-form-group">
               <label className="admin-form-label">Email Address (Read-only)</label>
               <input
@@ -144,7 +144,7 @@ export default function ProfilePage() {
       {/* Change Password Card */}
       <div className="admin-card">
         <h2 className="admin-card-title" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Lock size={18} color="#b66bff" />
+          <Lock size={18} color="var(--admin-neon-rose)" />
           <span>Change Password</span>
         </h2>
 

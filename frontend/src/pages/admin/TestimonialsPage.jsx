@@ -119,7 +119,7 @@ export default function TestimonialsPage() {
 
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Testimonials...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Testimonials...</div>
         ) : testimonials.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#9e97aa' }}>
             No testimonials added yet. Click "Add Testimonial" to create your first client recommendation.

@@ -130,7 +130,7 @@ export default function ServicesPage() {
 
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Services...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Services...</div>
         ) : services.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#9e97aa' }}>
             No services configured yet.
@@ -152,7 +152,7 @@ export default function ServicesPage() {
                 {services.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <span style={{ fontWeight: 800, color: '#b66bff' }}>{item.number}</span>
+                      <span style={{ fontWeight: 800, color: 'var(--admin-cerulean)' }}>{item.number}</span>
                     </td>
                     <td>
                       <strong style={{ color: '#fff' }}>{item.title}</strong>

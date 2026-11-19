@@ -128,7 +128,7 @@ export default function ProjectsPage() {
 
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Projects...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Projects...</div>
         ) : projects.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#9e97aa' }}>
             No portfolio projects added yet.
@@ -169,7 +169,7 @@ export default function ProjectsPage() {
                       <span style={{ color: '#9e97aa', fontSize: '12px' }}>{item.category}</span>
                     </td>
                     <td>
-                      <span style={{ color: '#b66bff', fontWeight: 700, fontSize: '12px', background: 'rgba(182, 107, 255, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+                      <span style={{ color: 'var(--admin-cerulean)', fontWeight: 700, fontSize: '12px', background: 'var(--admin-cerulean-subtle)', padding: '2px 8px', borderRadius: '4px' }}>
                         {item.metric || 'Case Study'}
                       </span>
                     </td>

@@ -111,7 +111,7 @@ export default function UsersPage() {
 
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Administrators...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Administrators...</div>
         ) : (
           <div className="admin-table-wrap">
             <table className="admin-table">
@@ -146,8 +146,8 @@ export default function UsersPage() {
                           fontWeight: 700,
                           padding: '3px 8px',
                           borderRadius: '6px',
-                          background: u.role === 'SUPER_ADMIN' ? 'rgba(139, 61, 255, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                          color: u.role === 'SUPER_ADMIN' ? '#b66bff' : '#fff',
+                          background: u.role === 'SUPER_ADMIN' ? 'rgba(255, 20, 147, 0.2)' : 'rgba(0, 150, 255, 0.15)',
+                          color: u.role === 'SUPER_ADMIN' ? 'var(--admin-neon-rose)' : 'var(--admin-cerulean)',
                         }}
                       >
                         {u.role}

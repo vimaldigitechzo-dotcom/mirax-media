@@ -122,9 +122,10 @@ export default function MediaPage() {
               borderRadius: '6px',
               fontSize: '12px',
               fontWeight: 600,
-              border: typeFilter === type ? '1px solid #b66bff' : '1px solid var(--admin-border)',
-              background: typeFilter === type ? 'rgba(182, 107, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-              color: typeFilter === type ? '#fff' : '#9e97aa',
+              border: typeFilter === type ? '1px solid var(--admin-cerulean)' : '1px solid var(--admin-border)',
+              background: typeFilter === type ? 'rgba(0, 150, 255, 0.22)' : 'rgba(255, 255, 255, 0.04)',
+              color: typeFilter === type ? '#fff' : '#9CA3AF',
+              boxShadow: typeFilter === type ? '0 0 10px rgba(0, 150, 255, 0.25)' : 'none',
               cursor: 'pointer',
             }}
           >
@@ -136,7 +137,7 @@ export default function MediaPage() {
       {/* Media Grid */}
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Media Assets...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Media Assets...</div>
         ) : mediaList.length === 0 ? (
           <div style={{ padding: '60px', textAlign: 'center' }}>
             <ImageIcon size={48} style={{ color: '#9e97aa', margin: '0 auto 14px', opacity: 0.5 }} />
@@ -190,7 +191,7 @@ export default function MediaPage() {
                       borderRadius: '4px',
                       fontSize: '10px',
                       fontWeight: 700,
-                      color: item.resourceType === 'VIDEO' ? '#f59e0b' : '#b66bff',
+                      color: item.resourceType === 'VIDEO' ? '#f59e0b' : 'var(--admin-cerulean)',
                     }}
                   >
                     {item.resourceType}

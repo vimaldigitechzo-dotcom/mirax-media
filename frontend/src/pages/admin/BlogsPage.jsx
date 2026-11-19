@@ -122,7 +122,7 @@ export default function BlogsPage() {
 
       <div className="admin-card">
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#b66bff' }}>Loading Blog Posts...</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--admin-cerulean)' }}>Loading Blog Posts...</div>
         ) : blogs.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#9e97aa' }}>
             No blog articles written yet. Click "Write New Post" to start sharing digital growth strategies.

@@ -37,7 +37,7 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <div style={{ color: '#b66bff', padding: '40px', textAlign: 'center' }}>Loading Dashboard Analytics...</div>;
+    return <div style={{ color: 'var(--admin-cerulean)', padding: '40px', textAlign: 'center' }}>Loading Dashboard Analytics...</div>;
   }
 
   if (error) {
@@ -180,7 +180,7 @@ export default function DashboardPage() {
                       <div style={{ color: '#9e97aa', fontSize: '12px' }}>{inq.phone}</div>
                     </td>
                     <td>
-                      <span style={{ color: '#b66bff', fontWeight: 600 }}>{inq.service}</span>
+                      <span style={{ color: 'var(--admin-cerulean)', fontWeight: 600 }}>{inq.service}</span>
                     </td>
                     <td>
                       <span className={`status-pill status-${inq.status.toLowerCase().replace('_', '-')}`}>

@@ -114,9 +114,10 @@ export default function SeoPage() {
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',
-              border: selectedPath === p.path ? '1px solid #b66bff' : '1px solid var(--admin-border)',
-              background: selectedPath === p.path ? 'rgba(182, 107, 255, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-              color: selectedPath === p.path ? '#fff' : '#9e97aa',
+              border: selectedPath === p.path ? '1px solid var(--admin-cerulean)' : '1px solid var(--admin-border)',
+              background: selectedPath === p.path ? 'rgba(0, 150, 255, 0.22)' : 'rgba(255, 255, 255, 0.04)',
+              color: selectedPath === p.path ? '#fff' : '#9CA3AF',
+              boxShadow: selectedPath === p.path ? '0 0 10px rgba(0, 150, 255, 0.25)' : 'none',
             }}
           >
             {p.label}

@@ -122,22 +122,13 @@ export default function ContentPage() {
       )}
 
       {/* Section Selector Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div className="admin-tabs-row">
         {SECTIONS.map((sec) => (
           <button
             key={sec.key}
             type="button"
             onClick={() => handleSelectSection(sec.key)}
-            style={{
-              padding: '10px 18px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              border: activeSection === sec.key ? '1px solid #b66bff' : '1px solid var(--admin-border)',
-              background: activeSection === sec.key ? 'linear-gradient(135deg, rgba(139, 61, 255, 0.3) 0%, rgba(182, 107, 255, 0.15) 100%)' : 'rgba(255, 255, 255, 0.04)',
-              color: activeSection === sec.key ? '#fff' : '#9e97aa',
-            }}
+            className={`admin-tab-btn ${activeSection === sec.key ? 'active' : ''}`}
           >
             {sec.label}
           </button>
@@ -147,9 +138,9 @@ export default function ContentPage() {
       {/* Content Form Card */}
       <div className="admin-card">
         <form onSubmit={handleSave}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--admin-border)', paddingBottom: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--admin-border)', paddingBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
             <h2 className="admin-card-title">
-              Editing: <span style={{ color: '#b66bff' }}>{activeSection.toUpperCase()}</span>
+              Editing: <span style={{ color: 'var(--admin-cerulean)' }}>{activeSection.toUpperCase()}</span>
             </h2>
 
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
@@ -196,7 +187,7 @@ export default function ContentPage() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className="admin-grid-2">
             <div className="admin-form-group">
               <label className="admin-form-label">Button Label</label>
               <input

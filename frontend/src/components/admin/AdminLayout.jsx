@@ -53,6 +53,13 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-wrapper">
+      {/* Mobile Backdrop Overlay */}
+      <div
+        className={`admin-sidebar-backdrop ${mobileOpen ? 'active' : ''}`}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+      />
+
       {/* Sidebar Navigation */}
       <aside className={`admin-sidebar ${mobileOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
@@ -63,9 +70,9 @@ export default function AdminLayout() {
             </div>
           </a>
           <button
-            className="admin-btn admin-btn-secondary"
-            style={{ display: mobileOpen ? 'flex' : 'none', padding: '6px' }}
+            className="admin-sidebar-close-btn"
             onClick={() => setMobileOpen(false)}
+            aria-label="Close sidebar"
           >
             <X size={18} />
           </button>
@@ -92,8 +99,8 @@ export default function AdminLayout() {
         </nav>
 
         {/* Sidebar Footer User Info */}
-        <div style={{ padding: '16px', borderTop: '1px solid var(--admin-border)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+        <div className="admin-sidebar-footer">
+          <div className="admin-user-info-row">
             <div className="admin-avatar">
               {admin?.fullName ? admin.fullName.charAt(0).toUpperCase() : 'A'}
             </div>
@@ -101,7 +108,7 @@ export default function AdminLayout() {
               <div style={{ fontSize: '13px', fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                 {admin?.fullName || 'Administrator'}
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--admin-accent)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--admin-neon-rose)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 700 }}>
                 {admin?.role || 'ADMIN'}
               </div>
             </div>
@@ -122,15 +129,17 @@ export default function AdminLayout() {
       <div className="admin-main">
         {/* Top Header Bar */}
         <header className="admin-topbar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button
-              className="admin-btn admin-btn-secondary"
-              style={{ padding: '8px' }}
+              className="admin-hamburger-btn"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle navigation menu"
             >
               <Menu size={18} />
             </button>
-            <h1 className="admin-topbar-title">MIRAX MEDIA Management Portal</h1>
+            <h1 className="admin-topbar-title">
+              MIRAX <span>PANEL</span>
+            </h1>
           </div>
 
           <div className="admin-topbar-actions">
@@ -139,14 +148,15 @@ export default function AdminLayout() {
               target="_blank"
               rel="noopener noreferrer"
               className="admin-view-site-btn"
+              title="View Public Website"
             >
               <ExternalLink size={14} />
-              <span>View Public Website</span>
+              <span className="desktop-only">View Website</span>
             </a>
 
-            <NavLink to="/admin/profile" className="admin-user-pill">
+            <NavLink to="/admin/profile" className="admin-user-pill" title="Profile & Security">
               <User size={14} />
-              <span>Profile & Security</span>
+              <span className="desktop-only">Profile</span>
             </NavLink>
           </div>
         </header>

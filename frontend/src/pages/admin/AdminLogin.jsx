@@ -37,21 +37,50 @@ export default function AdminLogin() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'radial-gradient(circle at center, #1b112d 0%, #09070f 85%)',
+        background: 'radial-gradient(circle at 50% 20%, #161616 0%, #0A0A0A 80%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
+        padding: '16px',
         fontFamily: 'inherit',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Ambient background glow accents */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '15%',
+          left: '20%',
+          width: '320px',
+          height: '320px',
+          background: 'radial-gradient(circle, rgba(0, 150, 255, 0.12) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '15%',
+          right: '20%',
+          width: '320px',
+          height: '320px',
+          background: 'radial-gradient(circle, rgba(255, 20, 147, 0.1) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
       <div
         className="admin-modal"
         style={{
           maxWidth: '440px',
-          padding: '36px',
-          border: '1px solid rgba(182, 107, 255, 0.3)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 50px rgba(139, 61, 255, 0.35)',
+          padding: '36px 30px',
+          background: 'rgba(18, 18, 18, 0.94)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 150, 255, 0.25)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
@@ -63,14 +92,14 @@ export default function AdminLogin() {
               height: '56px',
               borderRadius: '50%',
               margin: '0 auto 14px',
-              border: '2px solid #b66bff',
-              boxShadow: '0 0 25px rgba(182, 107, 255, 0.5)',
+              border: '2px solid #0096FF',
+              boxShadow: '0 0 20px rgba(0, 150, 255, 0.5), 0 0 35px rgba(255, 20, 147, 0.3)',
             }}
           />
-          <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#fff', letterSpacing: '0.5px' }}>
-            MIRAX <span style={{ color: '#b66bff' }}>ADMIN</span>
+          <h1 style={{ fontSize: '22px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>
+            MIRAX <span style={{ background: 'linear-gradient(135deg, #0096FF 0%, #FF1493 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ADMIN</span>
           </h1>
-          <p style={{ color: '#9e97aa', fontSize: '13px', marginTop: '6px' }}>
+          <p style={{ color: '#9CA3AF', fontSize: '13px', marginTop: '6px' }}>
             Sign in to manage MIRAX MEDIA website and inquiries
           </p>
         </div>

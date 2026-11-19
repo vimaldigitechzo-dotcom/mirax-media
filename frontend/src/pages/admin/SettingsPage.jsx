@@ -84,7 +84,7 @@ export default function SettingsPage() {
             Primary Contact & Notification Channels
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className="admin-grid-2">
             <div className="admin-form-group">
               <label className="admin-form-label">Official Notification Email</label>
               <input
@@ -114,7 +114,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className="admin-grid-2">
             <div className="admin-form-group">
               <label className="admin-form-label">Headquarters / Location</label>
               <input
@@ -143,7 +143,7 @@ export default function SettingsPage() {
             Branding & Social Presence
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className="admin-grid-2">
             <div className="admin-form-group">
               <label className="admin-form-label">Agency Name</label>
               <input
@@ -166,7 +166,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+          <div className="admin-grid-3">
             <div className="admin-form-group">
               <label className="admin-form-label">Instagram Profile URL</label>
               <input
