@@ -3,11 +3,20 @@
  * Centralized API client for all Admin Portal operations.
  */
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  (window.location.hostname === 'localhost'
-    ? 'http://localhost:5000/api'
-    : 'https://mirax-backend.onrender.com/api');
+// Determine base API URL safely
+const isLocal =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const envUrl = import.meta.env.VITE_API_BASE_URL;
+
+// On deployed production sites (like Vercel), ALWAYS use the Render cloud backend
+// unless a valid https:// environment variable is explicitly provided.
+const API_BASE_URL = isLocal
+  ? (envUrl || 'http://localhost:5000/api')
+  : (envUrl && envUrl.startsWith('https://')
+      ? envUrl
+      : 'https://mirax-backend.onrender.com/api');
 
 function getAuthHeaders(isFormData = false) {
   const token = localStorage.getItem('mirax_admin_token');
@@ -40,12 +49,22 @@ async function handleResponse(res) {
 export const adminApi = {
   // Authentication
   async login(email, password) {
-    const res = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    return handleResponse(res);
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      return await handleResponse(res);
+    } catch (err) {
+      if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+        throw new Error(
+          'Connecting to server... If Render was asleep, it may take 15-20 seconds to wake up. Please click Sign In again in a few seconds.'
+        );
+      }
+      throw err;
+    }
   },
 
   async getMe() {

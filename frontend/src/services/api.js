@@ -3,8 +3,18 @@
  * Connects frontend forms to the Node.js/Express Neon PostgreSQL backend.
  */
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+// Determine base API URL safely
+const isLocal =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const envUrl = import.meta.env.VITE_API_BASE_URL;
+
+const API_BASE_URL = isLocal
+  ? (envUrl || 'http://localhost:5000/api')
+  : (envUrl && envUrl.startsWith('https://')
+      ? envUrl
+      : 'https://mirax-backend.onrender.com/api');
 
 /**
  * Submits a customer enquiry to the backend.
