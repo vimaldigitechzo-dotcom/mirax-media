@@ -8,13 +8,9 @@ const isLocal =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-const envUrl = import.meta.env.VITE_API_BASE_URL;
-
-const API_BASE_URL = isLocal
-  ? (envUrl || 'http://localhost:5000/api')
-  : (envUrl && envUrl.startsWith('https://')
-      ? envUrl
-      : 'https://mirax-backend.onrender.com/api');
+// In local dev: talk to http://localhost:5000/api
+// In production (Vercel): use relative '/api', which Vercel rewrites directly to Render.
+const API_BASE_URL = isLocal ? 'http://localhost:5000/api' : '/api';
 
 /**
  * Submits a customer enquiry to the backend.

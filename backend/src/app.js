@@ -18,17 +18,7 @@ const app = express();
 // Trust reverse proxies (Render, Cloudflare, Vercel)
 app.set('trust proxy', 1);
 
-// 1. Security Headers via Helmet
-app.use(
-  helmet({
-    contentSecurityPolicy: false, // Allows media & external assets
-  })
-);
-
-// 2. Cookie Parser
-app.use(cookieParser());
-
-// 3. CORS Configuration
+// 1. CORS Configuration (Handled first so all cross-origin requests receive proper headers)
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'https://mirax-media-alpha.vercel.app',
@@ -41,7 +31,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, Postman)
+      // Allow requests with no origin (mobile apps, curl, server-to-server proxies like Vercel rewrites)
       // Or any vercel.app deployment
       if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
         return callback(null, true);
@@ -53,6 +43,19 @@ app.use(
     credentials: true,
   })
 );
+
+// 2. Security Headers via Helmet (Configured to allow cross-origin API communication)
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginOpenerPolicy: false,
+    originAgentCluster: false,
+  })
+);
+
+// 3. Cookie Parser
+app.use(cookieParser());
 
 // 4. Global General Rate Limiting
 const globalLimiter = rateLimit({

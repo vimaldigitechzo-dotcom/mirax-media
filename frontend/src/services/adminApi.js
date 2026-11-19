@@ -8,15 +8,10 @@ const isLocal =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-const envUrl = import.meta.env.VITE_API_BASE_URL;
-
-// On deployed production sites (like Vercel), ALWAYS use the Render cloud backend
-// unless a valid https:// environment variable is explicitly provided.
-const API_BASE_URL = isLocal
-  ? (envUrl || 'http://localhost:5000/api')
-  : (envUrl && envUrl.startsWith('https://')
-      ? envUrl
-      : 'https://mirax-backend.onrender.com/api');
+// In local dev: talk to http://localhost:5000/api
+// In production (Vercel): use relative '/api', which Vercel rewrites directly to Render.
+// This guarantees 100% same-origin security with zero CORS or CORP blocks.
+const API_BASE_URL = isLocal ? 'http://localhost:5000/api' : '/api';
 
 function getAuthHeaders(isFormData = false) {
   const token = localStorage.getItem('mirax_admin_token');

@@ -11,10 +11,10 @@ import { requireAdminAuth } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-// Strict Rate Limiting on Login to prevent brute force
+// Rate Limiting on Login to prevent brute force
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 mins
-  max: 10, // Max 10 attempts
+  max: 50, // Allow up to 50 attempts
   message: {
     success: false,
     message: 'Too many login attempts. Please wait 15 minutes before trying again.',
